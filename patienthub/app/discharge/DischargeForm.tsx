@@ -48,7 +48,7 @@ const dischargeSummaryText: string = `
 Discharge Summary for John DoeDischarge Summary for John Doe
 
 Patient Information:
-John Doe, a 34-year-old male, presented with respiratory difficulties and was admitted under the care of Dr. Smith on April 1, 2023. He was successfully treated and discharged on April 15, 2023.
+John Doe, a 45-year-old male, presented with respiratory difficulties and was admitted under the care of Dr. Smith on April 1, 2023. He was successfully treated and discharged on April 15, 2023.
 
 Diagnosis:
 The primary diagnosis was Acute Bronchitis, with a secondary condition of Asthma noted.
@@ -81,40 +81,6 @@ This summary was prepared by Dr. Smith, who has overseen John's treatment during
 
 // You can then set this text to a text area's value or state
 
-async function extractPatientData() {
-
-
-  const oai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY ?? undefined,
-    organization: process.env.OPENAI_ORG_ID ?? undefined
-  })
-
-  const client = Instructor({
-    client: oai,
-    mode: "TOOLS"
-  })
-
-  const extractionStream = await client.chat.completions.create({
-    messages: [{ role: "user", content: textBlock }],
-    model: "gpt-3.5-turbo",
-    response_model: {
-      schema: patientInformationSchema,
-      name: "Extraction"
-    },
-    max_retries: 3,
-    stream: true
-  })
-
-  let extractedData = {}
-  for await (const result of extractionStream) {
-    extractedData = result
-    console.log("Partial extraction:", result)
-  }
-  
-  console.log("Final extraction:", extractedData)
-}
-
-extractPatientData()
 
   const patientInformationSchema = z.object({
     name: z.string().optional(),
